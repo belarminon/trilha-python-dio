@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import date
 
+
 class Cliente:
     def __init__(self, endereco):
         self.endereco = endereco
@@ -19,6 +20,7 @@ class PessoaFisica(Cliente):
         self.nome = nome
         self.cpf = cpf
         self.data_nascimento = data_nascimento
+
 
 class Conta:
     def __init__(self, numero: int, agencia: str, cliente: 'Cliente'):
@@ -69,3 +71,25 @@ class Conta:
             return True
         return False
 
+
+class ContaCorrente(Conta):
+    def __init__(self, numero: int, agencia: str, cliente: 'Cliente', limite: float, limite_saques: int):
+        super().__init__(numero, agency=agencia, cliente=cliente)
+        self._limite: float = limite
+        self._limite_saques: int = limite_saques
+
+    @property
+    def limite(self) -> float:
+        return self._limite
+
+    @property
+    def limite_saques(self) -> int:
+        return self._limite_saques
+
+    # Sobrecarga do método sacar para considerar o limite de crédito
+    def sacar(self, valor: float) -> bool:
+        # Exemplo simples considerando saldo + limite
+        if valor > 0 and (self._saldo + self._limite) >= valor:
+            self._saldo -= valor
+            return True
+        return False

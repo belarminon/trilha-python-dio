@@ -113,3 +113,44 @@ class Historico:
         )
 
 
+class Transacao(ABC):
+    """Interface que define a estrutura de uma transação bancária."""
+    
+    @property
+    @abstractproperty
+    def valor(self) -> float:
+        pass
+
+    @abstractclassmethod
+    def registrar(self, conta: 'Conta') -> None:
+        pass
+
+
+class Deposito(Transacao):
+    def __init__(self, valor: float):
+        self._valor = valor
+
+    @property
+    def valor(self) -> float:
+        return self._valor
+
+    def registrar(self, conta: 'Conta') -> None:
+        # Executa o depósito na conta e registra no histórico
+        sucesso = conta.depositar(self.valor)
+        if sucesso:
+            conta.historico.adicionar_transacao(self)
+
+
+class Saque(Transacao):
+    def __init__(self, valor: float):
+        self._valor = valor
+
+    @property
+    def valor(self) -> float:
+        return self._valor
+
+    def registrar(self, conta: 'Conta') -> None:
+        # Executa o saque na conta e registra no histórico
+        sucesso = conta.sacar(self.valor)
+        if sucesso:
+            conta.historico.adicionar_transacao(self)

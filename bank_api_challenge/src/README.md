@@ -70,6 +70,12 @@ FastAPI automatically generates interactive documentation:
 -   **Account**: `id`, `user_id` (FK), `balance`.
 -   **Transaction**: `id`, `account_id` (FK), `type`, `amount`, `created_at`.
 
+## 🧹 Maintenance & Best Practices
+
+-   **Environment Isolation**: The `venv/` directory is ignored by Git to keep the repository lightweight and cross-platform compatible. Dependencies are managed via `requirements.txt`.
+-   **Local Database**: The `bank.db` file is ignored to prevent local test data from being committed.
+-   **Security**: Always ensure sensitive files like `.env` are listed in `.gitignore`.
+
 ## ⚠️ Important Notes
 
 -   **Security**: The `SECRET_KEY` in `auth.py` is currently set to a default value. For production environments, this should be moved to an environment variable.

@@ -6,7 +6,7 @@ This project is a simplified Bank API built with **FastAPI**, focusing on user r
 
 The project follows a modular structure to separate concerns and improve maintainability:
 
--   **`main.py`**: The entry point of the application. It defines the FastAPI instance, routes (endpoints), and application startup logic.
+-   **`main.py`**: The entry point of the application located at the project root. It defines the FastAPI instance, routes (endpoints), and application startup logic.
 -   **`models/models.py`**: Contains the **SQLAlchemy** database models (User, Account, Transaction), representing the relational structure of the system.
 -   **`database.py`**: Manages the database connection using **aiosqlite** for asynchronous SQLite operations and sets up the SQLAlchemy `AsyncSession`.
 -   **`services/services.py`**: Encapsulates the business logic for banking operations (depositing money, withdrawing, and fetching statements).
@@ -76,6 +76,7 @@ FastAPI automatically generates interactive documentation:
 -   **Environment Isolation**: The `venv/` directory is ignored by Git to keep the repository lightweight and cross-platform compatible. Dependencies are managed via `requirements.txt`.
 -   **Local Database**: The `bank.db` file is ignored to prevent local test data from being committed.
 -   **Security**: Always ensure sensitive files like `.env` are listed in `.gitignore`.
+-   **Error Handling**: Standardized business errors are managed via `exception.py`. Services raise `BusinessError` which the API layer catches to return consistent 400 Bad Request responses.
 
 ## ⚠️ Important Notes
 

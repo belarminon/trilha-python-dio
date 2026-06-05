@@ -9,6 +9,7 @@ The project follows a modular structure to separate concerns and improve maintai
 -   **`main.py`**: The entry point of the application located at the project root. It defines the FastAPI instance, routes (endpoints), and application startup logic.
 -   **`models/models.py`**: Contains the **SQLAlchemy** database models (User, Account, Transaction), representing the relational structure of the system.
 -   **`database.py`**: Manages the database connection using **aiosqlite** for asynchronous SQLite operations and sets up the SQLAlchemy `AsyncSession`.
+-   **`services/account.py`**: Provides specialized account management services using lower-level query interfaces.
 -   **`services/services.py`**: Encapsulates the business logic for banking operations (depositing money, withdrawing, and fetching statements).
 -   **`schemas/schemas.py`**: Defines **Pydantic** models for data validation, serialization, and API documentation (Request/Response bodies).
 -   **`auth.py`**: Handles security concerns, specifically JWT token generation for authenticated sessions.

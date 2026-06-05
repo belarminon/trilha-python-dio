@@ -61,10 +61,11 @@ FastAPI automatically generates interactive documentation:
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `POST` | `/register` | Create a new user and an associated bank account. |
-| `POST` | `/login` | Authenticate user and receive a JWT token. |
-| `POST` | `/transaction/{user_id}` | Perform a 'deposit' or 'withdraw'. |
-| `GET` | `/statement/{user_id}` | Retrieve current balance and transaction history. |
+| `POST` | `/auth/login` | Authenticate user and receive a JWT token. |
+| `GET`  | `/accounts` | List accounts with pagination. |
+| `POST` | `/accounts` | Create a new financial account. |
+| `POST` | `/transactions` | Perform a financial transaction (deposit/withdrawal). |
+| `GET`  | `/accounts/{id}/transactions` | Retrieve transaction history for a specific account. |
 
 ## 🗄️ Data Model
 
@@ -77,7 +78,7 @@ FastAPI automatically generates interactive documentation:
 -   **Environment Isolation**: The `venv/` directory is ignored by Git to keep the repository lightweight and cross-platform compatible. Dependencies are managed via `requirements.txt`.
 -   **Local Database**: The `bank.db` file is ignored to prevent local test data from being committed.
 -   **Security**: Always ensure sensitive files like `.env` are listed in `.gitignore`.
--   **Error Handling**: Standardized business errors are managed via `exception.py`. Services raise `BusinessError` which the API layer catches to return consistent 400 Bad Request responses.
+-   **Error Handling**: Global exception handlers in `main.py` catch `BusinessError` and `AccountNotFoundError` to return standardized JSON responses.
 
 ## ⚠️ Important Notes
 

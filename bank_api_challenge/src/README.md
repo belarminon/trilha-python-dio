@@ -7,12 +7,13 @@ This project is a simplified Bank API built with **FastAPI**, focusing on user r
 The project follows a modular structure to separate concerns and improve maintainability:
 
 -   **`main.py`**: The entry point of the application. It defines the FastAPI instance, routes (endpoints), and application startup logic.
--   **`models.py`**: Contains the **SQLAlchemy** database models (User, Account, Transaction), representing the relational structure of the system.
+-   **`models/models.py`**: Contains the **SQLAlchemy** database models (User, Account, Transaction), representing the relational structure of the system.
 -   **`database.py`**: Manages the database connection using **aiosqlite** for asynchronous SQLite operations and sets up the SQLAlchemy `AsyncSession`.
--   **`services.py`**: Encapsulates the business logic for banking operations (depositing money, withdrawing, and fetching statements).
--   **`schemas.py`**: Defines **Pydantic** models for data validation, serialization, and API documentation (Request/Response bodies).
+-   **`services/services.py`**: Encapsulates the business logic for banking operations (depositing money, withdrawing, and fetching statements).
+-   **`schemas/schemas.py`**: Defines **Pydantic** models for data validation, serialization, and API documentation (Request/Response bodies).
 -   **`auth.py`**: Handles security concerns, specifically JWT token generation for authenticated sessions.
 -   **`requirements.txt`**: Lists all necessary Python packages and dependencies for the project.
+-   **`exception.py`**: Custom exception classes for business logic and account errors.
 
 ## 🛠️ Technology Stack
 
@@ -79,6 +80,7 @@ FastAPI automatically generates interactive documentation:
 ## ⚠️ Important Notes
 
 -   **Security**: The `SECRET_KEY` in `auth.py` is currently set to a default value. For production environments, this should be moved to an environment variable.
+-   **Modular Imports**: The project uses absolute imports prefixed with `src.` to maintain compatibility with the modular structure.
 -   **Concurrency**: The project uses `aiosqlite` and `AsyncSession` to ensure that database I/O does not block the event loop, allowing for high-performance request handling.
 -   **Database Lifecycle**: The system automatically creates database tables on startup and manages sessions through an asynchronous dependency (`get_db`).
 

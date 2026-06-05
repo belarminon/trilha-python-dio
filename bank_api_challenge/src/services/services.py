@@ -1,5 +1,6 @@
 from sqlalchemy.future import select
-from models import Account, Transaction
+from src.models.models import Account, Transaction
+from exception import BusinessError
 
 async def deposit(db, account, amount):
     account.balance += amount
@@ -16,7 +17,7 @@ async def deposit(db, account, amount):
 
 async def withdraw(db, account, amount):
     if account.balance < amount:
-        raise Exception("Saldo insuficiente")
+        raise BusinessError("Saldo insuficiente")
 
     account.balance -= amount
 

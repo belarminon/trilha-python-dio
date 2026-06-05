@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import AsyncSessionLocal, engine, Base
-from models import User, Account
-from schemas import UserCreate, TransactionCreate
-from auth import create_token
-from services import deposit, withdraw, get_transactions
+from src.models.models import User, Account
+from src.schemas.schemas import UserCreate, TransactionCreate
+from src.auth import create_token
+from src.services.services import deposit, withdraw, get_transactions
+from exception import BusinessError
 from sqlalchemy.future import select
 from passlib.context import CryptContext
 
@@ -74,7 +75,7 @@ async def create_transaction(
     elif data.type == "withdraw":
         try:
             await withdraw(db, account, data.amount)
-        except Exception as e:
+        except BusinessError as e:
             raise HTTPException(400, str(e))
     else:
         raise HTTPException(400, "Tipo inválido")

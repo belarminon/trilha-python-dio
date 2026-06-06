@@ -8,7 +8,6 @@ The project follows a modular structure to separate concerns and improve maintai
 
 -   **`main.py`**: The entry point of the application located at the project root. It defines the FastAPI instance, routes (endpoints), and application startup logic.
 -   **`config.py`**: Centralized configuration management using `pydantic-settings` for environment variables and application secrets.
--   **`controllers/user.py`**: API router for User (Person) profile management.
 -   **`models/models.py`**: Contains the **SQLAlchemy** database models (User, Account, Transaction), representing the relational structure of the system.
 -   **`database.py`**: Manages the database connection using **aiosqlite** for asynchronous SQLite operations and sets up the SQLAlchemy `AsyncSession`.
 -   **`services/account.py`**: Provides specialized account management services using lower-level query interfaces.

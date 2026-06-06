@@ -1,10 +1,10 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.responses import CORSResponse
 
-from src.controllers import account, transaction, auth
+from src.controllers import account, auth, transaction
 from src.database import database
 from src.exceptions import AccountNotFoundError, BusinessError
 
@@ -29,19 +29,19 @@ tags_metadata = [
     {
         "name": "transactions",
         "description": "Gerenciamento de transações"
-    }
+    },
 ]
 
 
-
 app = FastAPI(
+    
     title="API de Gerenciamento Financeiro",
     version="1.0.0",
     openapi_tags=tags_metadata,
     lifespan=lifespan,
-    summary="Microservice to maintain withdrawals and deposits operations, with authentication and account management features."
+    summary="Microservice to maintain withdrawals and deposits operations, with authentication and account management features.",
     description="""
-     API para gerenciamento de contas e transações financeiras
+    API para gerenciamento de contas e transações financeiras
      
         ## Account Endpoints
         
@@ -51,17 +51,13 @@ app = FastAPI(
         
         ## Authentication Endpoints
         
-        - `POST /register`: Registrar um novo usuário
-        - `POST /login`: Realizar login e obter um token de acesso
+        - `POST /auth/login`: Realizar login e obter um token de acesso
         
         ## Transaction Endpoints
         
-        - `POST /transaction/{user_id}`: Realizar uma transação (depósito ou saque)
-        - `GET /statement/{user_id}`: Obter o extrato da conta do usuário, incluindo saldo e histórico de transações
-     """,
-    openapi_tags=tags_metadata,
-    lifespan=lifespan,
-    redoc_url=None
+        - `POST /transactions`: Realizar uma transação (depósito ou saque)
+    """,
+    redoc_url=None,
 )
 
 app.add_middleware(
@@ -72,8 +68,8 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-app.include_router(account.router, tags=["accounts"])
-app.include_router(transaction.router, tags=["transactions"])
+app.include_router(account.router, tags=["account"])
+app.include_router(transaction.router, tags=["transaction"])
 app.include_router(auth.router, tags=["auth"])
 
 

@@ -7,8 +7,9 @@ from src.views.transaction import TransactionOut
 
 router = APIRouter(prefix="/transactions", dependencies=[Depends(login_required)])
 
-transaction_service = TransactionService()
+service = TransactionService()
 
-@router.post("/", response_model=TransactionOut, status_code=status.HTTP_201_CREATED)
-async def create_transaction(transaction_in: TransactionIn):
-    return await transaction_service.create(transaction_in)
+
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=TransactionOut)
+async def create_transaction(transaction: TransactionIn):
+    return await service.create(transaction)

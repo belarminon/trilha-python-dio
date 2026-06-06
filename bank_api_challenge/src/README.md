@@ -20,6 +20,8 @@ The project follows a modular structure to separate concerns and improve maintai
 
 -   **Framework**: FastAPI (Asynchronous Python web framework)
 -   **Database**: SQLite (local file-based storage)
+-   **Async DB Toolkit**: `databases` (Asynchronous database support)
+-   **Configuration**: `pydantic-settings` (Environment variable management)
 -   **ORM**: SQLAlchemy (Asynchronous support via `ext.asyncio`)
 -   **Driver**: `aiosqlite`
 -   **Authentication**: JWT (JSON Web Tokens) via `python-jose`
@@ -44,10 +46,10 @@ pip install -r requirements.txt
 
 ### 2. Running the Application
 
-To start the development server, run:
+To start the development server, run this command from the **project root directory**:
 
 ```bash
-uvicorn main:app --reload
+uvicorn src.main:app --reload
 ```
 The API will be available at `http://127.0.0.1:8000`.
 
@@ -79,6 +81,9 @@ FastAPI automatically generates interactive documentation:
 -   **Local Database**: The `bank.db` file is ignored to prevent local test data from being committed.
 -   **Security**: Always ensure sensitive files like `.env` are listed in `.gitignore`.
 -   **Error Handling**: Global exception handlers in `main.py` catch `BusinessError` and `AccountNotFoundError` to return standardized JSON responses.
+-   **Resource Management**: The application uses a `lifespan` context manager in `main.py` to handle asynchronous database connections and clean shutdowns.
+-   **JWT Library Consistency**: The project strictly uses `python-jose` for JWT operations. Ensure all modules use `from jose import jwt` to prevent library conflicts.
+-   **Configuration**: Settings are managed via `src/config.py`, allowing for easy overrides through environment variables or a `.env` file.
 
 ## ⚠️ Important Notes
 

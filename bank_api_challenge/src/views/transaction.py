@@ -1,4 +1,4 @@
-from pydantic import AwareDatetime, BaseModel, NativeDatetime, PositiveFloat
+from pydantic import AwareDatetime, BaseModel, NaiveDatetime, PositiveFloat
 
 
 class TransactionOut(BaseModel):
@@ -6,4 +6,4 @@ class TransactionOut(BaseModel):
     account_id: int
     type: str
     amount: PositiveFloat
-    timestamp: NativeDatetime | AwareDatetime
+    timestamp: NaiveDatetime | AwareDatetime

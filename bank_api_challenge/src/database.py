@@ -1,14 +1,12 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
+import databases
+import sqlalchemy as sa
 
-DATABASE_URL = "sqlite+aiosqlite:///./bank.db"
+from src.config import settings
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+database = databases.Database(settings.database_url)
+metadata = sa.MetaData()
 
-AsyncSessionLocal = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
-
-Base = declarative_base()
+if settings.environment == "production":
+    engine = sa.create_engine(settings.database_url)
+else:
+    engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})

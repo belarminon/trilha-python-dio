@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from src.config import settings
 
 
-class AccessToken(BaseModel):
+class TokenPayload(BaseModel):
     iss: str
     sub: int
     aud: str
@@ -20,11 +20,7 @@ class AccessToken(BaseModel):
     jti: str
 
 
-class JWTToken(BaseModel):
-    access_token: AccessToken
-
-
-def sign_jwt(user_id: int) -> JWTToken:
+def sign_jwt(user_id: int) -> dict:
     now = time.time()
     payload = {
         "iss": "desafio-bank.com.br",
@@ -36,14 +32,13 @@ def sign_jwt(user_id: int) -> JWTToken:
         "jti": uuid4().hex,
     }
     token = jwt.encode(payload, settings.secret_key, algorithm=settings.algorithm)
-    return {"access_token": token}
+    return {"access_token": token, "token_type": "Bearer"}
 
 
-async def decode_jwt(token: str) -> JWTToken | None:
+async def decode_jwt(token: str) -> TokenPayload | None:
     try:
-        decoded_token = jwt.decode(token, settings.secret_key, audience="desafio-bank", algorithms=[settings.algorithm])
-        _token = JWTToken.model_validate({"access_token": decoded_token})
-        return _token if _token.access_token.exp >= time.time() else None
+        payload = jwt.decode(token, settings.secret_key, audience="desafio-bank", algorithms=[settings.algorithm])
+        return TokenPayload.model_validate(payload)
     except Exception:
         return None
 
@@ -52,35 +47,27 @@ class JWTBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
 
-    async def __call__(self, request: Request) -> JWTToken:
-        authorization = request.headers.get("Authorization", "")
-        scheme, _, credentials = authorization.partition(" ")
-
-        if credentials:
-            if not scheme == "Bearer":
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid authentication scheme.",
-                )
-
-            payload = await decode_jwt(credentials)
-            if not payload:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid or expired token.",
-                )
-            return payload
-        else:
+    async def __call__(self, request: Request) -> TokenPayload:
+        auth_credentials = await super().__call__(request)
+        if not auth_credentials:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authorization code.",
             )
 
+        payload = await decode_jwt(auth_credentials.credentials)
+        if not payload:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired token.",
+            )
+        return payload
+
 
 async def get_current_user(
-    token: Annotated[JWTToken, Depends(JWTBearer())],
+    token: Annotated[TokenPayload, Depends(JWTBearer())],
 ) -> dict[str, int]:
-    return {"user_id": token.access_token.sub}
+    return {"user_id": token.sub}
 
 
 def login_required(current_user: Annotated[dict[str, int], Depends(get_current_user)]):

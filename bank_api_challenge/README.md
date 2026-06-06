@@ -93,6 +93,7 @@ FastAPI automatically generates interactive documentation:
 -   **Resource Management**: The application uses a `lifespan` context manager in `main.py` to handle asynchronous database connections and clean shutdowns.
 -   **Data Validation**: Account creation allows starting balances of zero or greater using Pydantic's `NonNegativeFloat`.
 -   **Automated Seeding**: On startup, the system automatically seeds a full environment if the database is empty. It creates an Individual user ("Joao Silva") and a Company user ("Tech Solutions LTDA"), along with their respective bank accounts and an initial transaction history (deposits and withdrawals).
+-   **Authentication Flow**: The security layer leverages FastAPI's `HTTPBearer` for robust token extraction and `python-jose` for validation against a centralized configuration.
 -   **JWT Library Consistency**: The project strictly uses `python-jose` for JWT operations. Ensure all modules use `from jose import jwt` to prevent library conflicts.
 -   **Configuration**: Settings are managed via `src/config.py`, allowing for easy overrides through environment variables or a `.env` file.
 

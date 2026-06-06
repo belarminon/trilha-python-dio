@@ -1,18 +1,14 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
-from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
-from database import Base
+import sqlalchemy as sa
+from src.database import metadata
 
-from person import Person
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String)
-    useremail = Column(String, unique=True)
-    password = Column(String)
-    person_id = Column(Integer, ForeignKey("people.id"))
-    created_at = Column(DateTime(timezone=True), server_default=func.now()) 
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    person = relationship("Person", back_populates="users")
+users = sa.Table(
+    "users",
+    metadata,
+    sa.Column("id", sa.Integer, primary_key=True),
+    sa.Column("username", sa.String, unique=True, nullable=False),
+    sa.Column("email", sa.String, unique=True, nullable=False),
+    sa.Column("password", sa.String, nullable=False),
+    sa.Column("person_id", sa.ForeignKey("people.id"), nullable=False),
+    sa.Column("created_at", sa.DateTime, default=sa.func.now()),
+    sa.Column("updated_at", sa.DateTime, onupdate=sa.func.now())
+)

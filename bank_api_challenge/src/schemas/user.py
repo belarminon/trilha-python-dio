@@ -1,11 +1,14 @@
 from datetime import datetime
 from pydantic import BaseModel, EmailStr
-from src.models.person import PersonType
+from src.models.person import PersonType, PersonDocument
 
 class UserBase(BaseModel):
     name: str
+    username: str
     email: EmailStr
     classification: PersonType
+    document: str
+    document_type: PersonDocument
 
 class UserCreate(UserBase):
     password: str

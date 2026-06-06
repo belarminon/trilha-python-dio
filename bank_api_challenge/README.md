@@ -78,7 +78,8 @@ FastAPI automatically generates interactive documentation:
 
 ## 🗄️ Data Model
 
--   **Person**: `id`, `name`, `email`, `password` (hashed), `classification`, `created_at`.
+-   **Person**: `id`, `name`, `document` (CPF/CNPJ), `document_type`, `classification`, `created_at`.
+-   **User**: `id`, `username`, `email`, `password` (hashed), `person_id` (FK), `created_at`.
 -   **Account**: `id`, `user_id` (FK), `balance`.
 -   **Transaction**: `id`, `account_id` (FK), `type`, `amount`, `created_at`.
 
@@ -88,9 +89,10 @@ FastAPI automatically generates interactive documentation:
 -   **Local Database**: The `bank.db` file is ignored to prevent local test data from being committed.
 -   **Security**: Always ensure sensitive files like `.env` are listed in `.gitignore`.
 -   **Error Handling**: Global exception handlers in `main.py` catch `BusinessError` and `AccountNotFoundError` to return standardized JSON responses.
+-   **Schema Changes**: During development, if database models are updated, delete the local `bank.db` file to allow the system to recreate the schema on the next startup.
 -   **Resource Management**: The application uses a `lifespan` context manager in `main.py` to handle asynchronous database connections and clean shutdowns.
 -   **Data Validation**: Account creation allows starting balances of zero or greater using Pydantic's `NonNegativeFloat`.
--   **Automated Seeding**: On startup, the system automatically seeds the database with an "Individual" and a "Company" user if no users exist.
+-   **Automated Seeding**: On startup, the system automatically seeds a full environment if the database is empty. It creates an Individual user ("Joao Silva") and a Company user ("Tech Solutions LTDA"), along with their respective bank accounts and an initial transaction history (deposits and withdrawals).
 -   **JWT Library Consistency**: The project strictly uses `python-jose` for JWT operations. Ensure all modules use `from jose import jwt` to prevent library conflicts.
 -   **Configuration**: Settings are managed via `src/config.py`, allowing for easy overrides through environment variables or a `.env` file.
 

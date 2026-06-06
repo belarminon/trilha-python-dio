@@ -17,7 +17,7 @@ async def seed_data():
     from src.schemas.user import UserCreate
     from src.schemas.account import AccountIn
     from src.schemas.transaction import TransactionIn
-    from src.models.person import PersonType
+    from src.models.person import PersonType, PersonDocument
     from src.models.transaction import TransactionType
 
     user_service = UserService()
@@ -27,8 +27,13 @@ async def seed_data():
     if not await user_service.get_all(limit=1):
         # 1. Register Individual User
         u1 = await user_service.create(UserCreate(
-            name="Joao Silva", email="joao@individual.com", 
-            password="password123", classification=PersonType.INDIVIDUAL
+            name="Joao Silva", 
+            username="joaosilva", 
+            email="joao@individual.com.br", 
+            password="password123", 
+            classification=PersonType.INDIVIDUAL,
+            document="12345678901", 
+            document_type=PersonDocument.CPF
         ))
         a1 = await acc_service.create(AccountIn(user_id=u1['id'], balance=0))
         await tx_service.create(TransactionIn(account_id=a1['id'], amount=1000.0, type=TransactionType.DEPOSIT))
@@ -36,11 +41,16 @@ async def seed_data():
 
         # 2. Register Company User
         u2 = await user_service.create(UserCreate(
-            name="Tech Solutions LTDA", email="contact@techcorp.com", 
-            password="companypass", classification=PersonType.COMPANY
+            name="Tech Solutions LTDA", 
+            username="techsolutions", 
+            email="contact@techcorp.com.br", 
+            password="companypass", 
+            classification=PersonType.COMPANY,
+            document="12345678000199", 
+            document_type=PersonDocument.CNPJ
         ))
         a2 = await acc_service.create(AccountIn(user_id=u2['id'], balance=0))
-        await tx_service.create(TransactionIn(account_id=a2['id'], amount=5000.0, type=TransactionType.DEPOSIT))
+        await tx_service.create(TransactionIn(account_id=a2['id'], amount=50000.0, type=TransactionType.DEPOSIT))
 
 
 @asynccontextmanager
